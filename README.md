@@ -10,7 +10,7 @@ The project has three classes that are used throughout the program, each of them
 * Training a NER Model for a medical purpose:
     For this task a model from scratch using Spacy and the Medical NER dataset (https://www.kaggle.com/datasets/finalepoch/medical-ner), the training loss graph can be     viewed when running the program, also some metrics are used to evaluate the model.
     
-    <img style="width: 600px; height: 600px" src="loss_graph.jpg" alt="loss_graph">
+    <p align="center"><img style="width: 500px; height: 400px;" src="loss_graph.jpg" alt="loss_graph"></p>
     
 * Obtaining the Bleu Score of translations (english to spanish) made by AWS and GCP Translation APIs.
     For this task we will use the AWS and GCP Translation APIs, to set up the env file which contains the AWS API keys you will have to create a new "secrets.env" and     write the following variables: AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_SESSION_TOKEN, REGION_NAME.
