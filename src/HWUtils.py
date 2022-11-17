@@ -11,12 +11,21 @@ import matplotlib.pyplot as plt
 import warnings
 from nltk.translate.bleu_score import sentence_bleu
 import boto3
-warnings.filterwarnings('ignore')
+warnings.filterwarnings('ignore') # Add a comment here about why you did this 
 import os
 from dotenv import load_dotenv
 from google.cloud import translate_v2 as translate
+# Nit: sort imports according to python style: https://peps.python.org/pep-0008/#imports
+# pycharm will do this for you automatically if you just use the "optimize imports" function! 
 
+# Overall, really clean code, great job!!! You should add tests for these classes in a tests file.
+# In general, writing tests as you code will really help. every time I finish writing a class, I 
+# immediately write some tests to make sure that it functions as expected and I often catch bugs that 
+# way! 
 
+# Also, were this my code, I would probably split into three files, one for each class. usually, the
+# python standard is one class per file, and the file name imitates the class name but with snake case rather than camel case. 
+NUM_LINES_TO_PREPROCESS=100
 class Sentiment:
     """
     A class used to give solution to the first task of the homework.
@@ -94,7 +103,7 @@ class Sentiment:
             else:
                 print("NEGATIVE")
     
-    def check(self):
+    def check(self): # I don't think this method is necessary! but if you need to get the name of the class, you should use  __class__.__name__ rather than hardcoding it. 
         
         """
         Checks the name of the class.
@@ -182,8 +191,8 @@ class NER:
         
         full_data = []
 
-        for d in self.data:
-            ent = []
+        for d in self.data: # in general, one-letter var names are discouraged! for datapoint in self.data or something 
+            ent = [] # same comment, make this a more descriptive/readable variable name 
             for a in d['annotations']:
                 if len(a['value']) == len(a['value'].strip()):
                     if len(a['human_annotations']) == 0:
@@ -211,11 +220,11 @@ class NER:
         train_loss= []
         nlp = spacy.blank('en')
 
-        if 'ner' not in nlp.pipe_names:
+        if 'ner' not in nlp.pipe_names: # shouldnt need this conditional, can just always add the pipe
             ner = nlp.add_pipe('ner', last=True)
 
         for _, annotations in self.train:
-            for ent in annotations.get('entities'):
+            for ent in annotations.get('entities'): # for entity in 
                 ner.add_label(ent[2])
                 
         other_pipes = [pipe for pipe in nlp.pipe_names if pipe != 'ner']
@@ -238,7 +247,7 @@ class NER:
         ax.set_xlabel('Steps (epochs)')
         plt.show()
 
-        nlp.to_disk('./')
+        nlp.to_disk('./') # make this a named constant at the top. see https://peps.python.org/pep-0008/
         
     def model_evaluation(self):
         
@@ -370,8 +379,8 @@ class Translate:
     def preprocess_data(self):
         
         """
-        Reads and preprocesss the data contained in the two files and assigns the 
-        first 100 lines of the file to a list.
+        Reads and preprocesses the data contained in the two files and assigns the 
+        first NUM_LINES_TO_PREPROCESS lines of the file to a list.
         
         Returns
         -------
@@ -383,12 +392,12 @@ class Translate:
 
         with open(self.lang1_data, 'r', encoding='utf-8') as f:
             lines = f.readlines()
-            for line in lines[:100]:
+            for line in lines[:NUM_LINES_TO_PREPROCESS]: 
                 spanish_texts.append(line)
             
         with open(self.lang2_data, 'r', encoding='utf-8') as f:
             lines = f.readlines()
-            for line in lines[:100]:
+            for line in lines[:NUM_LINES_TO_PREPROCESS]:
                 english_texts.append(line)
 
         spanish_texts = [x.replace("\n", "") for x in spanish_texts]
@@ -420,18 +429,18 @@ class Translate:
         aws_bleu = []
         google_bleu = []
 
-        for i in range(len(self.lang2)):
+        for i, input_to_translate in enumerate(self.lang2)
 
-            aws_result = aws_translate.translate_text(Text= self.lang2[i], 
+            aws_result = aws_translate.translate_text(Text=input_to_translate, 
                                             SourceLanguageCode='en', 
                                             TargetLanguageCode='es')
 
 
-            google_result = google_translate.translate(self.lang2[i], 'es')
+            google_result = google_translate.translate(sinput_to_translate, 'es')
 
 
-            Ableu = sentence_bleu(self.lang1[i].split(), aws_result['TranslatedText'].split())
-            Gbleu = sentence_bleu(self.lang1[i].split(), google_result['translatedText'].split())
+            Ableu = sentence_bleu(input_to_translate.split(), aws_result['TranslatedText'].split())
+            Gbleu = sentence_bleu(sinput_to_translate.split(), google_result['translatedText'].split())
             
             aws_bleu.append(Ableu)
             google_bleu.append(Gbleu)
